@@ -1,0 +1,695 @@
+﻿
+
+@model  ArogyaParivar.Models.Patient
+
+
+@{
+    ViewBag.Title = "PatientRegistration";
+    Layout = "~/Views/Shared/_ArogyaParivarLayout.cshtml";
+}
+
+
+@using (Html.BeginForm()) {
+
+    @Html.ValidationSummary(true)
+   
+         
+    <section class="content-header">
+        <h1>Patient Registration</h1>
+        </section>
+    <section class="content">
+            <div class="box box-warning">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-user"></i>Patient info</h3>
+                    <div class="box-tools pull-right">
+                        <div class="time-label bg-red" style="padding: 5px 10px">Patient ID : </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row" style="padding: 10px">
+                        <div class="col-lg-12">
+                            <section class="col-lg-8 col-sm-8 ">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Patient Name</label>
+                                            <div class="col-sm-7" >
+                                                @Html.TextBoxFor(model => model.PatientName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.PatientName)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Surname</label>
+                                            <div class="col-sm-7">
+                                                @Html.TextBoxFor(model => model.Surname, null, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Surname)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Age</label>
+                                            <div class="col-sm-7">
+
+                                                @Html.TextBoxFor(model => model.Age, null, new { @class = "form-control",id = "Age" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Select</label>
+                                            <div class="col-sm-7">
+                                                 @Html.DropDownListFor(model => model.Cal, new SelectList(string.Empty, "Value", "Text"), new { id = "Cal", @class = "form-control" })
+                                           
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Gender</label>
+                                            <div class="col-sm-7">
+                                                @Html.DropDownListFor( model => model.Gender, new SelectList(string.Empty, "Value", "Text"), "Please select a Gender", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Gender)
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Aadhaar No.</label>
+                                            <div class="col-sm-7">
+                                                @Html.TextBoxFor(model => model.AadharID, null, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.AadharID)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Address</label>
+                                            <div class="col-sm-7">
+                                                @Html.TextBoxFor(model => model.Address, null, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">State</label>
+                                            <div class="col-sm-7">
+                                                 @Html.DropDownListFor(model => model.Sate, new SelectList(string.Empty, "Value", "Text"), "Select", new { id = "State", @class = "form-control" })
+                                               
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">District</label>
+                                            <div class="col-sm-7">
+                                                  @Html.DropDownList("city", new SelectList(string.Empty, "Value", "Text"), "Select", new { id = "city", @class = "form-control" })
+                                               
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Town</label>
+                                            <div class="col-sm-7">
+                                               @Html.DropDownList("Mandal", new SelectList(string.Empty, "Value", "Text"), "Select", new { id = "Mandal", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Village</label>
+                                            <div class="col-sm-7">
+                                                @Html.DropDownList("Village", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Contact Number</label>
+                                            <div class="col-sm-7">
+                                                @Html.TextBoxFor(model => model.ContactNo, null, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Referrer By</label>
+                                            <div class="col-sm-7">
+                                               @Html.DropDownList("RefBy", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                              
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-5 control-label-left">Referrer Name</label>
+                                            <div class="col-sm-7">
+                                               @Html.TextBoxFor(model => model.RefName, null, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                  <div class="row">
+
+                                 </div>
+                                 <div class="row">
+
+                                 </div>
+                                   <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            
+                                              @Html.CheckBox("Consent",new { @class = "col-sm-5 control-label-left" })
+                                            <div class="col-sm-7">
+                                                    <label class="col-sm-5 control-label-left">Consent</label>
+                                              
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                            </section>
+                            <section class="col-lg-4 col-sm-4">
+                                <div style="margin: 0 auto; width: 980px; text-align: center">
+                           @*     <div style="float: left; border: 4px solid #ccc; padding: 5px">
+                                 <div id="Camera">
+                                </div>
+                                <br>
+                                <input type="button"  value="Capture" onclick="Pic();" />
+                                </div>*@
+                                <div style="float: left; margin-left: 20px; border: 4px solid #ccc; padding: 5px">
+                                <img id="show" style="width: 320px; height: 240px;" src="../../WebImages/Webcam.png" />
+                                </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 10px">
+                        <div class="col-lg-12 text-right">
+                            <input id="submit" type="submit" name="command" value="Submit" class="btn btn-warning" />
+                           @* <input id="Button3" type="submit" value="Print ID card" class="btn btn-warning" />
+                            <input id="Button2" type="submit" value="Reset" class="btn btn-warning" />*@
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+            </div>
+            <!-- /.box -->
+        </section>
+       
+
+   
+    
+}
+
+
+
+<script src="../../Scripts/jquery-1.7.1.js" type="text/javascript"></script>
+
+<script src="../../Scripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+        $("#State").change(function () {
+
+            $("#city").empty();
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '@Url.Action("GetCity")',
+
+                dataType: 'json',
+
+                data: { id: $("#State").val() },
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#city").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+                       
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+            return false;
+
+        })
+
+     });
+
+
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+        $("#city").change(function () {
+
+            $("#Mandal").empty();
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '@Url.Action("GetMandal")',
+
+                dataType: 'json',
+
+                data: { sId: $("#State").val() ,dId: $("#city").val()},
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#Mandal").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+            return false;
+
+        })
+
+    });
+
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+        $("#Mandal").change(function () {
+
+            $("#Village").empty();
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '@Url.Action("GetVillage")',
+
+                dataType: 'json',
+
+                data: {  sId: $("#State").val() ,dId: $("#city").val(),id: $("#Mandal").val() },
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#Village").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+            return false;
+
+        })
+
+      });
+
+
+
+
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+       
+            $("#State").empty();
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '@Url.Action("GetState")',
+
+                dataType: 'json',
+
+                data: { id: $("#State").val() },
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#State").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+                        $("#State option[value='" + 9 + "']").attr("selected", "true");
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+            return false;
+
+       
+
+     });
+
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+
+        $("#Cal").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetCal")',
+
+                dataType: 'json',
+
+                data: { id: $("#Cal").val() },
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#Cal").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+          return false;
+
+
+
+      });
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+
+        $("#Gender").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetGender")',
+
+                dataType: 'json',
+
+                data: { id: $("#Gender").val() },
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#Gender").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+        return false;
+
+
+
+    });
+
+
+
+
+    $(document).ready(function () {
+
+        //Dropdownlist Selectedchange event
+
+
+        $("#RefBy").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetRefBy")',
+
+            dataType: 'json',
+
+            data: { id: $("#RefBy").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#RefBy").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve GetRefBy.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+</script>
+<script type="text/javascript">
+    function UploadPic() {
+        $.ajax({
+            type: 'POST',
+            url: ("@Url.Content("~/Photo/Rebind")/"),
+            dataType: 'json',
+            success: function (data) {
+                $("#show").attr("src", data);
+                document.getElementById('Submit1').disabled = false;
+                alert("Photo Capture successfully!");
+            }
+        });
+    }
+
+    function Uploadsubmit() {
+        var src = $('img').attr('src');
+        src_array = src.split('/');
+        src = src_array[4];
+        if (src != "") {
+            $.ajax({
+                type: 'POST',
+                url: ("@Url.Content("~/HealthEducator/PatientRegistration")/"),
+                dataType: 'json',
+                data: { Imagename: src },
+                success: function () { }
+            });
+
+           
+          
+        }
+    }
+</script>
+  @*<script src="/Scripts/jquery.webcam.js">
+        </script>*@
+   @*<script type="text/javascript">
+     
+           $("#Camera").webcam({
+               width: 320,
+               height: 240,
+               mode: "save",
+               swffile: "/Scripts/jscam.swf",
+               onTick: function () { },
+               onSave: function () {
+                   UploadPic();
+               },
+               capture: function () {
+                   webcam.onSave("/Photo/WebImages/");
+               },
+               debug: function () { },
+               onLoad: function () { }
+
+           });
+    
+
+        </script>*@
+
+
+  <script type="text/javascript">
+
+      
+      function Pic() {
+          webcam.onSave("/Photo/WebImages/");
+
+      }
+        </script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#txtEmail").first().focus();
+
+        $("#Age").change(function () {
+            var Age = $(this).val();
+            //$("#txtName").val(emailId);
+            $.ajax({
+                url: 'Dateofbirth',
+                type: 'POST',
+                data: JSON.stringify({ Age: Age }),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data != "" || data != null) {
+                        $("#DOB").val(data);
+                    }
+                    else {
+                        alert("Our system does not recognize this email. Please try again.");
+                        $("#DOB").focus();
+                    }
+                }
+            });
+        });
+    });
+
+
+    @Html.Raw(ViewBag.PopupScript);
+    </script>

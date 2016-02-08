@@ -1,0 +1,45 @@
+﻿@if (Model != null)
+{
+    using (Html.BeginForm("MenuClick", "Menu", FormMethod.Post))
+    {
+    <div class="navbar navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+                <li class="menu">
+                    <a href="~/Default/Default">Home</a>
+                </li>
+                @if(Model.RolePrives != null && Model.RolePrives.Count > 0)
+                {
+                    foreach (var menu in Model.RolePrives)
+                    {
+                        <li class="menu">
+                            <a href="~/@menu.Controler/@menu.ActionMethod">@menu.MenuText</a>
+                        </li>
+                    }
+                }
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div id="progressTimer" style="margin-left: 10px; margin-right: 10px; margin-top:5px; width: 200px; display:@Model.Display;">
+                    </div>
+                </li>
+                <li>
+                    <label id="lblLoginUser" style="margin: 5px; padding-right: 15px">@Model.UserDescription ( @Model.UserName )</label>
+                </li>
+                <li>
+                    <div class="navbar-collapse collapse navbar-responsive-collapse">
+                        @*<img src="~/Content/Images/logout-button.jpg" id="btnlogout" />*@
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    }
+}

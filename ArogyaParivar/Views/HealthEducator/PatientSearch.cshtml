@@ -1,0 +1,134 @@
+﻿@model IEnumerable<EHM.Hybrid.Framework.DAL.PatientModel>
+
+@{
+    ViewBag.Title = "PatientSearch";
+    Layout = "~/Views/Shared/_ArogyaParivarLayout.cshtml";
+}
+
+<h2>PatientSearch</h2>
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+      <fieldset>
+        <legend>PatientModel</legend>
+<section class="content">
+            <div class="box box-warning">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-user"></i>Patient Search</h3>
+                </div>
+                <div class="box-body">
+                    <div class="callout callout-danger">
+                        <div class="row" style="padding: 0px 10px">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="col-lg-3">
+                                     @Html.TextBox("Fromdate", null, new { @class = "form-control",@id="Fromdate",@onchange = "onchangeevent();", @placeholder = "MM/DD/YYYY" })
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="Text2" type="text" class="form-control" placeholder="To Date" />
+                                       
+                                    </div>
+                                    <div class="col-lg-3">
+                                        @Html.TextBox("ArogyaID", null, new { @class = "form-control", @placeholder = "Patient ID" })
+                                        
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="Text4" type="text" class="form-control" placeholder="Village" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="col-lg-3">
+                                    
+                                        @Html.TextBox("surName", null, new { @class = "form-control", @placeholder = "name" })
+                                      @*  <input id="txtsurname" type="text" class="form-control" placeholder="Surname" />*@
+                                    </div>
+                                    <div class="col-lg-3">
+                                          @Html.TextBox( "Name", null, new { @class = "form-control" } );
+                                    </div>
+                                    <div class="col-lg-3">
+                                        @Html.TextBox( "MobileNo", null, new { @class = "form-control" } );
+                                    </div>
+                                    <div class="col-lg-3 text-right">
+                                        <input id="search" type="submit"  value="Search" class="btn btn-warning" />
+                                        <input id="submit" type="submit" name="command" value="Reset" class="btn btn-warning" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="box-body table-responsive">
+                                <table class="table table-bordered  table-hover">
+                                    <thead>
+                                        <tr>
+                                           @* <th>Date</th>*@
+                                            <th>Patient ID</th>
+                                            <th>Patient Name</th>
+                                            <th>State</th>
+                                            <th>Village</th>
+                                            <th>Mobile No.</th>
+                                           @* <th>Village</th>*@
+                                            @*<th>Genarate Token</th>
+                                            <th>Edit</th>*@
+                                        </tr>
+                                    </thead>
+                                 
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.ArogyaID, "UpdateRegistration", "HealthEducator", new {item.ArogyaID}, null)
+           @* @Html.DisplayFor(modelItem => item.ArogyaID)*@
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PatientName)
+        </td>
+   
+         <td>
+            @Html.DisplayFor(modelItem => item.StateName)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.VillageName)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactNo)
+        </td>
+      @*  <td>
+           <a href="PatientHealthRecord.aspx">Genarate Token</a>
+        </td>
+          <td> @Html.ActionLink("EDIT", "UpdateRegistration", "HealthEducator", new {item.ArogyaID}, null)</td>
+     *@
+    
+    </tr>
+}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+           </fieldset>
+    
+}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+      <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+      <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+  <script type='text/javascript'>//<![CDATA[
+     
+      function onchangeevent(){
+               
+          $("#Fromdate").datetimepicker();
+                 };
+     
+
+</script>
+ 
+
+
+    
+

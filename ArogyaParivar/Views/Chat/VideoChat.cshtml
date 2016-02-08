@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Video Chat";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Video Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Styles -->
+    <link href="~/Content/icomoon/style.css" rel="stylesheet" />
+    <link href="~/Content/VideoChat.css" rel="stylesheet" />
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/alertify/alertify.core.css" rel="stylesheet" />
+    <link href="~/Content/alertify/alertify.default.css" rel="stylesheet" />
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style>
+div.video {
+    position: relative;
+    width: 400px;
+    height: 200px;
+    border: 3px solid #73AD21;
+background-color:red;
+} 
+
+div.thumbnail {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    border: 3px solid #73AD21;
+background-color:white;
+top:0;
+left:0
+}
+</style>
+</head>
+
+<body ng-app="videochat-app" ng-controller="VideoChatController">
+    <!-- Invalid browser alert, and reminder to enable media things -->
+    <div class="container-fluid">
+        <div class="row-fluid browser-warning">
+            <div class="span12">
+                <div class="alert alert-error"><h4>Your browser does not appear to support WebRTC.</h4> Try either the <a href="https://nightly.mozilla.org/">latest Firefox nightly build</a>, or <a href="https://www.google.com/intl/en/chrome/browser/beta.html">Google Chrome Beta</a> to join the fun.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Area -->
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <!-- Side Bar -->
+            <div class="span3">
+                <!-- In Call Actions -->
+                <div class="well actions">
+                    <div class="status" data-mode="{{mode}}"></div>
+                    <button class="btn btn-danger hangup">Hang Up</button>
+                </div>
+                <!-- User List -->
+                <div class="well user-list">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Online Users</li>
+                        <li class="user" ng-repeat="user in userList" data-cid="{{user.ConnectionId}}" title="{{user.Username}}">
+                            <a href="#">
+                                <!-- only using an a here for bootstrap styling -->
+                                <div class="username">{{user.Username}}</div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                </div>
+            </div>
+            <!-- Videos -->
+
+            <div class="row-fluid">
+               
+                    
+                    <div class="video">
+                        <video class="video partner" autoplay="autoplay"></video>
+                        <div class="thumbnail">
+                        <video class="video mine " autoplay="autoplay"></video>
+                    </div>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Libs -->
+    <script src="~/Scripts/angular/angular.min.js"></script>
+    <script src="~/Scripts/adapter.js"></script>
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/alertify.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/connectionManager.js"></script>
+    <script src="~/Scripts/VideoChat.js"></script>
+</body>
+</html>

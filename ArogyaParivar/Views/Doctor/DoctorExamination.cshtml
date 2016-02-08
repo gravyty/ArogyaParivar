@@ -1,0 +1,1033 @@
+﻿@model  ArogyaParivar.Models.DocotorScreening
+@{
+    ViewBag.Title = "DoctorExamination";
+}
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        name="viewport">
+
+    <!-- Bootstrap 3.3.5 -->
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link href="~/dist/css/AdminLTE.min.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+
+
+    <link href="~/dist/css/skins/skin-blue-light.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link href="../Content/icomoon/style.css" rel="stylesheet" />
+    <link href="../Content/VideoChat.css" rel="stylesheet" />
+    <link href="../Content/alertify/alertify.core.css" rel="stylesheet" />
+    <link href="../Content/alertify/alertify.default.css" rel="stylesheet" />
+
+
+    <style>
+        div.video {
+            position: relative;
+            width: 400px;
+            height: 200px;
+            border: 3px solid #73AD21;
+            background-color: red;
+        }
+
+        div.thumbnail {
+            position: absolute;
+            top: 80px;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #73AD21;
+            background-color: white;
+            top: 0;
+            left: 0;
+        }
+    </style>
+
+</head>
+<body class="fixed sidebar-mini skin-blue-light">
+    <form id="form1" runat="server" class="form-horizontal">
+        <div class="wrapper">
+            <header class="main-header">
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <ul class="nav navbar-nav text-aqua" style="padding-left: 15px; padding-top: 10px">
+                        <li style="padding-right: 25px">Chief Complaint: <span style="color: #FFF">@Model.ChiefComplaintName</span>
+                        </li>
+                        <li style="padding-right: 25px">Date: <span style="color: #FFF">@(DateTime.Now)</span>
+                        </li>
+                        <li>Arogya ID:<span style="color: #FFF"> @(Session["arogyid"])</span></li>
+                    </ul>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown messages-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-video-camera"></i>&nbsp;Video Consultation </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="menu">
+                                            <li>
+                                                <!-- start message -->
+                                                <div id="videochat" ng-app="videochat-app" ng-controller="VideoChatController">
+                                                    <!-- Invalid browser alert, and reminder to enable media things -->
+                                                    <div class="container-fluid">
+                                                        <div class="row-fluid browser-warning">
+                                                            <div class="span12">
+                                                                <div class="alert alert-error">
+                                                                    <h4>Your browser does not appear to support WebRTC.</h4>
+                                                                    Try either the <a href="https://nightly.mozilla.org/">latest Firefox nightly build</a>,
+                                                                    or <a href="https://www.google.com/intl/en/chrome/browser/beta.html">Google Chrome Beta</a>
+                                                                    to join the fun.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- App Area -->
+                                                    <div class="container-fluid">
+                                                        <div class="row-fluid">
+                                                            <!-- Side Bar -->
+                                                            <div class="span3">
+                                                                <!-- In Call Actions -->
+                                                                <div class="well actions">
+                                                                    <div class="status" data-mode="{{mode}}"></div>
+                                                                    <button class="btn btn-danger hangup">Hang Up</button>
+                                                                </div>
+                                                                <!-- User List -->
+                                                                <div class="well user-list">
+                                                                    <ul class="nav nav-list">
+                                                                        <li class="nav-header">Online Users</li>
+                                                                        <li class="user" ng-repeat="user in userList" data-cid="{{user.ConnectionId}}" title="{{user.Username}}">
+                                                                            <a href="#">
+                                                                                <!-- only using an a here for bootstrap styling -->
+                                                                                <div class="username">{{user.Username}}</div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <!-- /ko -->
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Videos -->
+
+                                                            <div class="row-fluid">
+
+
+                                                                <div class="video">
+                                                                    <video class="video partner" autoplay="autoplay"></video>
+                                                                    <div class="thumbnail">
+                                                                        <video class="video mine " autoplay="autoplay" muted="muted"></video>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @section scripts{
+                                                        <!-- Libs -->
+                                                        <script src="../Scripts/angular/angular.min.js"></script>
+                                                        <script src="../Scripts/adapter.js"></script>
+
+                                                        <script src="../Scripts/alertify.min.js"></script>
+                                                        <script src="../Scripts/jquery.signalR-2.2.0.js"></script>
+                                                        <script src="../signalr/hubs"></script>
+                                                        <script src="../Scripts/connectionManager.js"></script>
+                                                        <script src="../Scripts/VideoChat.js"></script>
+                                                    }
+                                                </div>
+                                            </li>
+                                            <!-- end message -->
+                                        </ul>
+                                    </li>
+                                    <li class="footer"><a href="#">Start Video</a></li>
+                                </ul>
+                            </li>
+                            <!-- Notifications: style can be found in dropdown.less -->
+                            <li class="dropdown notifications-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-briefcase"></i>&nbsp;Previous History
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <%--<li class="header">You have 10 notifications</li>
+                                    --%>
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="menu">
+                                            <li>
+                                                <a href="#"><i class="fa fa-medkit warning"></i>Headache</a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="fa fa-medkit warning"></i>stomach pain</a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><i class="fa fa-medkit warning"></i>Joint Pain</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="footer"><a href="#">View all</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- User Account: style can be found in dropdown.less -->
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                    <span class="hidden-xs">@(Session["UserID"])</span>
+                                </a>
+                                <ul class="dropdown-menu" style="width: 580px;">
+                                    <!-- User image -->
+                                    <li class="user-header bg-light-blue">
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-3">
+                                                <img src="Images/bhanu-249140.jpg" class="img-circle" alt="User Image" height="100px"
+                                                    width="100px" />
+                                                <p>
+                                                    <small>Arogya ID</small><br />
+                                                    AROGYA000001
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Name:</label>
+                                                    <label class="col-sm-7 control-label text-left">Bhanu Prakash Pasupuleti</label>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Age/Gender:</label>
+                                                    <label class="col-sm-7 control-label text-left">M/39</label>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Aadhaar No:</label>
+                                                    <label class="col-sm-7 control-label text-left">345355345353</label>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Address:</label>
+                                                    <label class="col-sm-7 control-label text-left">
+                                                        16-1-347,<br />
+                                                        Saidabad<br />
+                                                        Hyderabad<br />
+                                                    </label>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Contact No:</label>
+                                                    <label class="col-sm-7 control-label text-left">9949937565</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a href="#" class="btn btn-warning btn-flat">Edit Profile</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="#" class="btn btn-warning btn-flat">Case Close</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-warning">
+                        <div class="box-header">
+                            <h3 class="box-title"><i class="fa fa-medkit"></i>Personal Health Record</h3>
+
+                           @* <label>StartVideo </label>
+                            <div class="box-header">
+                                <a href="#" id="lnkStartToVideo" onclick="startvideo()"></a>
+                                <label id="lblStatus"></label>
+                            </div>*@
+                            <a href="#" onclick="startvideo('@(Session["arogyid"])',@(Session["UserID"]),3,'@(Session["UserName"])');return false;">Start video call</a>
+                            <div class="box-body">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#tab_1" data-toggle="tab">Examination</a></li>
+                                        <li><a href="#tab_2" data-toggle="tab">Case Sheet</a></li>
+                                        <li><a href="#tab_3" data-toggle="tab">ECG</a></li>
+                                        <li><a href="#tab_4" data-toggle="tab">View Documents</a></li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab_1">
+                                            <div style="padding: 0 10px">
+                                                <div class="row" style="padding: 0px 30px">
+                                                    <div class="callout callout-danger">
+                                                        <div style="padding: 0 10px">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <h4 class="text-warning">Vitals</h4>
+                                                                    <div class="col-lg-2 col-xs-6">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-aqua"><i class="fa fa-arrows-v"></i></span>
+                                                                            <div class="info-box-content">
+                                                                                <span class="info-box-text text-muted">Height</span>
+                                                                                <span class="info-box-number text-muted">@Model.Height'</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </div>
+                                                                    <div class="col-lg-2 col-xs-6">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-aqua"><i class="fa fa-street-view"></i></span>
+                                                                            <div class="info-box-content">
+                                                                                <span class="info-box-text text-muted">Weight</span>
+                                                                                <span class="info-box-number text-muted">@Model.Weight kg</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </div>
+                                                                    <div class="col-lg-2 col-xs-6">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-orange"><i class="fa fa-user-plus"></i></span>
+                                                                            <div class="info-box-content">
+                                                                                <span class="info-box-text text-muted">BP sys/dia</span>
+                                                                                <span class="info-box-number text-muted">@Model.SysBP/@Model.DiaBP</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </div>
+                                                                    <div class="col-lg-2 col-xs-6">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-orange"><i class="fa fa-heartbeat"></i></span>
+                                                                            <div class="info-box-content">
+                                                                                <span class="info-box-text text-muted">Pulse</span>
+                                                                                <span class="info-box-number text-muted">@Model.Pulse</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </div>
+                                                                    <div class="col-lg-2 col-xs-6">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-olive"><i class="fa fa-heartbeat"></i></span>
+                                                                            <div class="info-box-content">
+                                                                                <span class="info-box-text text-muted">Temparature</span>
+                                                                                <span class="info-box-number text-muted">@Model.Temparature °F</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </div>
+                                                                    <div class="col-lg-2 col-xs-6">
+                                                                        <div class="info-box">
+                                                                            <span class="info-box-icon bg-olive"><i class="fa fa-heartbeat"></i></span>
+                                                                            <div class="info-box-content">
+                                                                                <span class="info-box-text text-muted">Respiratory</span>
+                                                                                <span class="info-box-number text-muted">@Model.Respiratory rmp</span>
+                                                                            </div>
+                                                                            <!-- /.info-box-content -->
+                                                                        </div>
+                                                                        <!-- /.info-box -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h4>Allergies</h4>
+                                                    <div class="box-body table-responsive">
+                                                        <table class="table table-bordered  table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    @*<th style="width: 10px">#</th>*@
+                                                                    <th>Date/Time</th>
+                                                                    <th>Allergy Type</th>
+                                                                    <th>Reaction</th>
+                                                                    <th>Severity</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (Model != null && Model.Allergies.Count > 0)
+                                                                {
+                                                                    foreach (var emdetail in Model.Allergies)
+                                                                    {
+                                                                    <tr>
+                                                                        @*<td>@emdetail.CreateDate</td>*@
+                                                                        <td>@emdetail.CreateDate</td>
+                                                                        <td>@emdetail.AllergyTypeName</td>
+                                                                        <td>@emdetail.ReactionName</td>
+                                                                        <td>@emdetail.SeverityName</td>
+                                                                        <td>@emdetail.StatusName</td>
+
+                                                                    </tr>                                                    
+                                                                    }
+                                                                }
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Presenting Complaint</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Compalaint", new { id = "PCID", @class = "form-control" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">History of Presenting Complaint</label>
+                                                        <div class="col-sm-6">
+                                                            @*<textarea id="txtPresentingcomplaint" cols="20" rows="2" class="form-control"></textarea>*@
+                                                            @Html.TextBoxFor(model => model.HistoryPresentingComplaint, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Past Medical History</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.PastMedicalHistory, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Past Surgical History</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.PastSurgicalHistory, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Family History</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.FamilyHistory, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Current Medication</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.CurrentMedication, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Diagnosis</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.Diagnosis, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">ECG Outcome</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a ECG out Come", new { id = "ECGID", @class = "form-control" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Screening Outcome</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Screening out come", new { id = "ScreenID", @class = "form-control" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Tests</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.Tests, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Medication</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="callout callout-danger">
+                                                                <div style="padding: 0 10px">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-5 control-label-left">Drug Name</label>
+                                                                                <div class="col-sm-6 ">
+                                                                                    <div class="input-group">
+                                                                                        <input id="txtdrugname" type="text" class="form-control" />
+                                                                                        <div class="input-group-btn">
+                                                                                            <button type="button" class="btn btn-info"><i class="fa fa-search"></i></button>
+                                                                                        </div>
+                                                                                        <!-- /btn-group -->
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- /input-group -->
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-5 control-label-left">Dose</label>
+                                                                                <div class="col-sm-6">
+                                                                                    @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Dose", new { id = "DosageID", @class = "form-control" })
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-5 control-label-left">Dosage Frequency</label>
+                                                                                <div class="col-sm-6">
+                                                                                    @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Dose Frequency", new { id = "FrequencyID", @class = "form-control" })
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-5 control-label-left">Duration</label>
+                                                                                <div class="col-sm-6">
+                                                                                    <input id="txtDuration" type="text" class="form-control" placeholder="" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-5 control-label-left">Route of Administration</label>
+                                                                                <div class="col-sm-6">
+                                                                                    @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Route", new { id = "RouteID", @class = "form-control" })
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label class="col-sm-5 control-label-left">Special Instructions</label>
+                                                                                <div class="col-sm-6">
+                                                                                    @*@Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Instruction", new { id = "SpecialtyID", @class = "form-control" })*@
+                                                                                    <input id="txtinstruction" type="text" class="form-control" placeholder="" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12 text-right">
+                                                                            <input id="btnAddDrug" onclick="saveData()" type="button" value="Add Drug" class="btn btn-warning" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="box-body table-responsive">
+                                                                <table id="tblMeadiction" class="table table-bordered  table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Date</th>
+                                                                            <th>Drug Name</th>
+                                                                            <th>Dosage</th>
+                                                                            <th>Duration</th>
+                                                                            <th>Frequency</th>
+                                                                            <th>Route of Administration</th>
+                                                                            <th>Special Instructions</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label-left">Treatment Plan</label>
+                                                        <div class="col-sm-6">
+                                                            @Html.TextBoxFor(model => model.TreatMentPlan, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="tab_2">
+
+                                            <iframe id="IfCasesheet" src="/HealthEducator/EncounterSummary?arogyaID=@(Session["arogyid"])" style="width: 100%; height: 1000px; overflow: scroll;" frameborder="0"></iframe>
+
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="tab_3">
+                                        </div>
+                                        <div class="tab-pane" id="tab_4">
+                                            <div style="padding: 0 50px">
+                                                <iframe id="IfUpload" src="/HealthEducator/UploadDocuments?tokenNumber=@(Session["Token"])&arogyaID=@(Session["arogyid"])&complaintID=@Model.ChiefComplaintID&userID=@(Session["UserID"])" style="width: 100%; height: 1000px; overflow: scroll;" frameborder="0"></iframe>
+
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                    </div>
+                                    <!-- /.tab-content -->
+                                </div>
+                                <!-- nav-tabs-custom -->
+                                <div class="row">
+                                    <div class="col-lg-11 text-right">
+                                        <input id="btnSave" onclick="saveScreenData()" type="button" value="Save" class="btn btn-warning" />
+                                        <input id="Button2" type="button" value="Save as Draft" class="btn btn-warning" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label id="lblMsgbox" class="col-sm-2 control-label-left"></label>
+                                    <input type="hidden" id="hdnCCID" value="@Model.ChiefComplaintID" />
+                                    <input type="hidden" id="hdnECGID" value="@Model.ECGOutcomeID" />
+                                    <input type="hidden" id="hdnSOCID" value="@Model.ScreenOutcomeID" />
+
+
+                                </div>
+                            </div>
+                            <!-- /.box-footer-->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                </div>
+            </div>
+    </form>
+</body>
+</html>
+<!-- jQuery 2.1.4 -->
+<script src="../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
+<!-- Bootstrap 3.3.5 -->
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+@*<script src="plugins/fastclick/fastclick.min.js"></script>*@
+<!-- AdminLTE App -->
+<script src="../dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../dist/js/demo.js"></script>
+<script src="../../Scripts/jquery-1.7.1.js" type="text/javascript"></script>
+
+<script src="../../Scripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+
+        $("#PCID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetpresentingCompalints")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#PCID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+                    var valu = $("#hdnCCID").val();
+                    if (valu != null) {
+                        $("#PCID option[value='" + valu + "']").attr("selected", "true");
+                        $("#PCID").attr('disabled', 'disabled');
+                    }
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+    });
+
+
+    $(document).ready(function () {
+
+        $("#DosageID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetDosage")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#DosageID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+    $(document).ready(function () {
+
+        $("#FrequencyID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetDosageFrequency")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#FrequencyID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+    $(document).ready(function () {
+
+        $("#RouteID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetRoute")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#RouteID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+    });
+
+    $(document).ready(function () {
+
+        $("#ScreenID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("../HealthEducator/Getscreeningoutcome")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#ScreenID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+                    var valu = $("#hdnSOCID").val();
+                    if (valu != null) {
+                        $("#ScreenID option[value='" + valu + "']").attr("selected", "true");
+                    }
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve Screening data.' + ex);
+
+            }
+
+        });
+
+        return false;
+    });
+
+
+    $(document).ready(function () {
+
+        $("#ECGID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("../HealthEducator/GetECGoutcome")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#ECGID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                    var valu = $("#hdnECGID").val();
+                    if (valu != null) {
+                        $("#ECGID option[value='" + valu + "']").attr("selected", "true");
+                        $("#ECGID").attr('disabled', 'disabled');
+                    }
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve ECG Data.' + ex);
+
+            }
+
+        });
+
+        return false;
+    });
+
+
+    function saveData() {
+        var DrugName = $("#txtdrugname").val();
+        var Doseid = $("#DosageID").val();
+        var Frequencyid = $("#FrequencyID").val();
+        var Duration = $("#txtDuration").val();
+        var Routid = $("#RouteID").val();
+        var Instruction = $("#txtinstruction").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("saveMedicationData")',
+            data: "{DrugName:'" + DrugName + "',Doseid:'" + Doseid + "',Frequencyid:'" + Frequencyid + "',Duration:'" + Duration + "',Routid:'" + Routid + "',Instruction:'" + Instruction + "'}",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            async: "true",
+            success: function (response) {
+
+                bindMedicationTable(response);
+
+            },
+            error: function (response) {
+                alert(response.status + ' ' + response.statusText);
+            }
+        });
+    }
+
+    function bindMedicationTable(response) {
+        //personDataTable;
+        var thead = $("#tblMeadiction thead")[0].outerHTML;
+
+        var tablerows = "";
+        for (var i = 0; i <= response.length - 1; i++) {
+            var row = "<tr>";
+            row += '<td>' + (i + 1).toString() + '</td>';
+            // var date = new Date(response[i].CreateDate)
+            var date = getdate(response[i].CreateDate)
+            row += '<td>' + date + '</td>';
+            row += '<td>' + response[i].DrugName + '</td>';
+            row += '<td>' + response[i].M_DosageName + '</td>';
+            row += '<td>' + response[i].Duration + '</td>';
+            row += '<td>' + response[i].M_FrequencyName + '</td>';
+            row += '<td>' + response[i].M_RouteName + '</td>';
+            row += '<td>' + response[i].SpecialInstruction + '</td>';
+            row += '</tr>';
+            tablerows += row;
+        }
+        $("#tblMeadiction")[0].innerHTML = thead + tablerows;
+        clearcontrol();
+    }
+
+    function saveScreenData() {
+        var data = {
+            Doctormodel: {
+                ChiefComplaintID: $("#PCID").val(),
+                HistoryPresentingComplaint: $("#HistoryPresentingComplaint").val(),
+                PastMedicalHistory: $("#PastMedicalHistory").val(),
+                PastSurgicalHistory: $("#PastSurgicalHistory").val(),
+                FamilyHistory: $("#FamilyHistory").val(),
+                CurrentMedication: $("#CurrentMedication").val(),
+                Diagnosis: $("#Diagnosis").val(),
+                Tests: $("#Tests").val(),
+                TreatMentPlan: $("#TreatMentPlan").val(),
+                ScreeningoutcomeID: $("#ScreenID").val(),
+
+            }
+        };
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("saveExaminationData")',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                //$("#lblMsgbox")[0].innerHTML = msg;
+                // Do something interesting here.
+                alert("Data Saved Successfully");
+
+                $("#IfCasesheet")[0].src = "/HealthEducator/EncounterSummary?arogyaID=@(Session["arogyid"])";
+                $("#IfUpload")[0].src = "/HealthEducator/UploadDocuments?tokenNumber=@(Session["Token"])&arogyaID=@(Session["arogyid"])&complaintID=" + $("#PCID").val() + "&userID=@(Session["UserID"])";
+
+            },
+            error: function (response) {
+                alert(response.status + ' ' + response.statusText);
+            }
+        });
+
+    }
+
+    function getdate(date) {
+        //var MyDate_String_Value = 
+        var value = new Date
+                    (
+                         parseInt(date.replace(/(^.*\()|([+-].*$)/g, ''))
+                    );
+        var date = value.getMonth() +
+                                 1 +
+                               "/" +
+                   value.getDate() +
+                               "/" +
+               value.getFullYear();
+        return date;
+    }
+
+    function startvideo(arogyaid, UserID, NurseID,UserName) {
+        debugger;
+        angular.element($("#videochat")).scope()._start(arogyaid, UserID, NurseID, UserName,'doctor');
+        return arogyaid, UserID, NurseID;
+    }
+
+    function clearcontrol() {
+        $("#txtdrugname").val('');
+        $("#DosageID").val('');
+        $("#FrequencyID").val('');
+        $("#txtDuration").val('');
+        $("#RouteID").val('');
+        $("#txtinstruction").val('');
+    }
+
+</script>

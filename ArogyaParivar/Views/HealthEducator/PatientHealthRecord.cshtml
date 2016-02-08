@@ -1,0 +1,1847 @@
+﻿@model  ArogyaParivar.Models.Screening
+@{
+    ViewBag.Title = "PatientHealthRecord";
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        name="viewport">
+
+    <!-- Bootstrap 3.3.5 -->
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link href="~/dist/css/AdminLTE.min.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+
+
+    <link href="~/dist/css/skins/skin-blue-light.min.css" rel="stylesheet" />
+
+    <link href="~/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="../Content/icomoon/style.css" rel="stylesheet" />
+    <link href="../Content/VideoChat.css" rel="stylesheet" />
+    <link href="../Content/alertify/alertify.core.css" rel="stylesheet" />
+    <link href="../Content/alertify/alertify.default.css" rel="stylesheet" />
+
+
+    <style>
+        div.video {
+            position: relative;
+            width: 400px;
+            height: 200px;
+            border: 3px solid #73AD21;
+            background-color: red;
+        }
+
+        div.thumbnail {
+            position: absolute;
+            top: 80px;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #73AD21;
+            background-color: white;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body class="fixed sidebar-mini skin-blue-light">
+    <form id="form1" runat="server" class="form-horizontal">
+        <div class="wrapper">
+            <header class="main-header">
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <ul class="nav navbar-nav text-aqua" style="padding-left: 15px; padding-top: 10px">
+
+                        <li style="padding-right: 25px">Date: <span style="color: #FFF">@(DateTime.Now)</span>
+                        </li>
+                        <li>Arogya ID:<span style="color: #FFF"> @(Session["strArogyaID"])
+
+                        </span></li>
+                    </ul>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown messages-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-video-camera"></i>&nbsp;Video Consultation </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="menu">
+                                            <li>
+                                                <!-- start message -->
+                                                <div id="videochat" ng-app="videochat-app" ng-controller="VideoChatController">
+                                                    <!-- Invalid browser alert, and reminder to enable media things -->
+                                                    <div class="container-fluid">
+                                                        <div class="row-fluid browser-warning">
+                                                            <div class="span12">
+                                                                <div class="alert alert-error">
+                                                                    <h4>Your browser does not appear to support WebRTC.</h4>
+                                                                    Try either the <a href="https://nightly.mozilla.org/">latest Firefox nightly build</a>,
+                                                                    or <a href="https://www.google.com/intl/en/chrome/browser/beta.html">Google Chrome Beta</a>
+                                                                    to join the fun.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- App Area -->
+                                                    <div class="container-fluid">
+                                                        <div class="row-fluid">
+                                                            <!-- Side Bar -->
+                                                            <div class="span3">
+                                                                <!-- In Call Actions -->
+                                                                <div class="well actions">
+                                                                    <div class="status" data-mode="{{mode}}"></div>
+                                                                    <button class="btn btn-danger hangup">Hang Up</button>
+                                                                </div>
+                                                                <!-- User List -->
+                                                                <div class="well user-list">
+                                                                    <ul class="nav nav-list">
+                                                                        <li class="nav-header">Online Users</li>
+                                                                        <li class="user" ng-repeat="user in userList" data-cid="{{user.ConnectionId}}" title="{{user.Username}}">
+                                                                            <a href="#">
+                                                                                <!-- only using an a here for bootstrap styling -->
+                                                                                <div class="username">{{user.Username}}</div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <!-- /ko -->
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Videos -->
+
+                                                            <div class="row-fluid">
+
+
+                                                                <div class="video">
+                                                                    <video class="video partner" autoplay="autoplay"></video>
+                                                                    <div class="thumbnail">
+                                                                        <video class="video mine " autoplay="autoplay" muted="muted"></video>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @section scripts{
+                                                        <!-- Libs -->
+                                                        <script src="../Scripts/angular/angular.min.js"></script>
+                                                        <script src="../Scripts/adapter.js"></script>
+
+                                                        <script src="../Scripts/alertify.min.js"></script>
+                                                        <script src="../Scripts/jquery.signalR-2.2.0.js"></script>
+                                                        <script src="../signalr/hubs"></script>
+                                                        <script src="../Scripts/connectionManager.js"></script>
+                                                        <script src="../Scripts/VideoChat.js"></script>
+                                                    }
+                                                </div>
+                                            </li>
+                                            <!-- end message -->
+                                        </ul>
+                                    </li>
+                                    <li class="footer"><a href="#">Start Video</a></li>
+                                </ul>
+                            </li>
+                            <!-- Notifications: style can be found in dropdown.less -->
+                            <li class="dropdown notifications-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-briefcase"></i>&nbsp;Previous History
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="menu">
+                                            <li>
+
+                                                <table id="tblPrevHistory" style="position: absolute; left: 10px; top: 10px; z-index: 9999">
+                                                    <tr>
+                                                        <td>#</td>
+                                                        <td>Date</td>
+                                                        <td>Complaint</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>12/1/2016</td>
+                                                        <td>Stomach Pain</td>
+                                                        <td><a href="#" onclick="prepopulateData('12/1/2016', tokenNumber )">Select</a></td>
+                                                    </tr>
+                                                </table>
+
+                                            </li>
+                                            <!-- end message -->
+                                        </ul>
+                                    </li>
+                                    <li class="footer"><a href="#"></a></li>
+                                </ul>
+
+                            </li>
+
+                            <!-- User Account: style can be found in dropdown.less -->
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                    <span class="hidden-xs">@(Session["UserName"]) </span>
+                                </a>
+                                <ul class="dropdown-menu" style="width: 580px;">
+                                    <!-- User image -->
+                                    <li class="user-header bg-light-blue">
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-3">
+                                                <img src="Images/bhanu-249140.jpg" class="img-circle" alt="User Image" height="100px"
+                                                    width="100px" />
+                                                @* <p>
+                                                    <small>Arogya ID</small><br />
+                                                    AROGYA000003
+                                                </p>*@
+                                            </div>
+                                            @*<div class="col-sm-9">
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Name:</label>
+                                                    @Html.DisplayFor(modelItem => Model.PatientName, new { @class = "col-sm-7 control-label text-left" })
+
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Age/Gender:</label>
+                                                    <label class="col-sm-7 control-label text-left">M/39</label>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Aadhaar No:</label>
+                                                    @Html.DisplayFor(modelItem => Model.AadharID, new { @class = "col-sm-7 control-label text-left" })
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Address:</label>
+                                                    <label class="col-sm-7 control-label text-left">
+                                                        16-1-347,<br />
+                                                        Saidabad<br />
+                                                        Hyderabad<br />
+                                                    </label>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="col-sm-4 control-label text-left">Contact No:</label>
+                                                    <label class="col-sm-7 control-label text-left">9949937565</label>
+                                                </div>
+                                            </div>*@
+                                        </div>
+                                    </li>
+
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a href="#" class="btn btn-warning btn-flat">Edit Profile</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="#" class="btn btn-warning btn-flat">Case Close</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box box-warning">
+                            <div class="box-header">
+                                <h3 class="box-title"><i class="fa fa-medkit"></i>Personal Health Record</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#tab_1" data-toggle="tab">Screening</a></li>
+                                        <li><a href="#tab_2" data-toggle="tab">Case Sheet</a></li>
+                                        <li><a href="#tab_3" data-toggle="tab">ECG</a></li>
+                                        <li><a href="#tab_4" data-toggle="tab">Upload Documents</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab_1">
+                                            <h3>Vitals</h3>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="callout callout-danger">
+                                                        <div style="padding: 0 10px">
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-5 control-label-left">Date & Time:</label>
+                                                                        <label class="col-sm-7 control-label-left">@DateTime.Now</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">Height:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            @Html.TextBoxFor(model => model.Height, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon">Cms</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">Weight:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            @Html.TextBoxFor(model => model.Weight, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon">Kg</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">BMI:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            @Html.TextBoxFor(model => model.BMI, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">BP:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            <span class="input-group-addon">sys</span>
+                                                                            @Html.TextBoxFor(model => model.SysBP, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon">dia</span>
+                                                                            @Html.TextBoxFor(model => model.DiaBP, null, new { @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">Temparature:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            @Html.TextBoxFor(model => model.Temparature, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon">°C</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">Pulse:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            @Html.TextBoxFor(model => model.Pulse, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon">bpm</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label-left">Respiratory:</label>
+                                                                        <div class="col-sm-6 input-group">
+                                                                            @Html.TextBoxFor(model => model.Respiratory, null, new { @class = "form-control" })
+                                                                            <span class="input-group-addon">rpm</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4 text-right">
+                                                                    <input id="Submit1" type="button" onclick="saveVitaltData()" value="Save" class="btn btn-warning" />
+                                                                    <input id="Submit2" type="button" value="Reset" class="btn btn-warning" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3>Allergies</h3>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="callout callout-danger">
+                                                        <div style="padding: 0 10px">
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-5 control-label-left">Allergy Type</label>
+                                                                        <div class="col-sm-6">
+
+                                                                            @* <option>~Select~</option>*@
+                                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Allergy Type", new { id = "AllrgyTypid", @class = "form-control" })
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-5 control-label-left">Reaction</label>
+                                                                        <div class="col-sm-6">
+                                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Reaction", new { id = "Reactionid", @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-5 control-label-left">Severity</label>
+                                                                        <div class="col-sm-6">
+                                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Reaction", new { id = "Severityid", @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-5 control-label-left">Status</label>
+                                                                        <div class="col-sm-6">
+                                                                            @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Reaction", new { id = "Statusid", @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-4 text-right">
+                                                                    <input type="button" onclick="saveData()" id="btnSave" value="Save" title="Save"
+                                                                        class="btn btn-warning" />
+                                                                    <input id="Submit4" type="submit" value="Reset" class="btn btn-warning" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="box-body table-responsive">
+                                                        <table class="table table-bordered  table-hover" id="personDataTable">
+
+
+                                                            <thead>
+
+                                                                <tr>
+                                                                    <th style="width: 10px">#</th>
+                                                                    <th>Date/Time</th>
+                                                                    <th>Allergy Type</th>
+                                                                    <th>Reaction</th>
+                                                                    <th>Severity</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            @if (Model.Allergys != null)
+                                                            {
+                                                                int k = 1;
+                                                                foreach (var user in Model.Allergys)
+                                                                {
+                                                                
+                                           
+                                                                <tr>
+
+                                                                    <td>@(k++)</td>
+                                                                    <td>@Html.DisplayFor(modelItem => user.CreateDate)</td>
+                                                                    <td>@Html.DisplayFor(modelItem => user.AllergyType)</td>
+                                                                    <td>@Html.DisplayFor(modelItem => user.ReactionName)</td>
+                                                                    <td>@Html.DisplayFor(modelItem => user.SeverityrName)</td>
+                                                                    <td>@Html.DisplayFor(modelItem => user.Status)</td>
+
+                                                                </tr>
+                                                                }
+                                                            }
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding: 0px 30px">
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">Presenting Complaint</label>
+                                                    <div class="col-sm-4">
+                                                        @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Reaction", new { id = "PCID", @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">CheckList</label>
+                                                    <div class="col-sm-4">
+                                                        <select id="chklist" class="form-control">
+                                                            <option id="option0" value="0" onclick="option4();">~Select~</option>
+                                                            <option id="option1" value="1" onclick="option1();">Anemia</option>
+                                                            <option id="option2" value="2" onclick="option2();">Cardiology</option>
+                                                            <option id="Rep" value="3" selected="selected" onclick="option3();">Respiratory</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div id="Anemia" hidden="hidden" style="">
+                                                    <div class="box box-warning">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title">Anemia</h3>
+                                                        </div>
+                                                        <div class="box-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left" id="Anemia1">I feel fatigued </label>
+                                                                            <div class="col-sm-6">
+                                                                                <div class="radio">
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio1" id="Radio0" type="radio" checked="" value="1" />
+                                                                                        Never          
+                                                                                    </label>
+                                                                                    <label>
+
+                                                                                        <input name="Anemiaradio1" id="Radio1" type="radio" checked="" value="2" />
+                                                                                        Very rarely            
+                                                                                    </label>
+                                                                                    <label>
+
+                                                                                        <input name="Anemiaradio1" id="Radio2" type="radio" checked="" value="2" />
+                                                                                        Sometimes           
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio1" id="Radio3" type="radio" checked="" value="3" />
+                                                                                        Often          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio1" id="Radio4" type="radio" checked="" value="3" />
+                                                                                        Very Many times           
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left" id="2">I feel weak all over </label>
+                                                                            <div class="col-sm-6">
+                                                                                <div class="radio">
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio2" id="Radio5" type="radio" value="1" />
+                                                                                        Never          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio2" id="Radio6" type="radio" value="1" />
+                                                                                        Very rarely         
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio2" id="Radio7" type="radio" checked="" value="2" />
+                                                                                        Sometimes           
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio2" id="Radio8" type="radio" checked="" value="2" />
+                                                                                        Often          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio2" id="Radio9" type="radio" checked="" value="3" />
+                                                                                        Very Many times           
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left" id="3">
+                                                                                I feel listless (“washed out”)
+                                                                            </label>
+                                                                            <div class="col-sm-6">
+                                                                                <div class="radio">
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio3" id="Radio10" type="radio" value="1" />
+                                                                                        Never          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio3" id="Radio11" type="radio" value="1" />
+                                                                                        Very rarely         
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio3" id="Radio12" type="radio" checked="" value="2" />
+                                                                                        Sometimes           
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio3" id="Radio13" type="radio" checked="" value="3" />
+                                                                                        Often          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio3" id="Radio14" type="radio" checked="" value="3" />
+                                                                                        Very Many times           
+                                                                                    </label>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left" id="4">I feel tired </label>
+                                                                            <div class="col-sm-6">
+                                                                                <div class="radio">
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio4" id="Radio15" type="radio" value="1" />
+                                                                                        Never          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio4" id="Radio16" type="radio" value="1" />
+                                                                                        Very rarely         
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio4" id="Radio17" type="radio" checked="" value="2" />
+                                                                                        Sometimes           
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio4" id="Radio18" type="radio" checked="" value="3" />
+                                                                                        Often          
+                                                                                    </label>
+                                                                                    <label>
+                                                                                        <input name="Anemiaradio4" id="Radio19" type="radio" checked="" value="3" />
+                                                                                        Very Many times           
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left">Score</label>
+                                                                            <label class="col-sm-6 control-label-left" id="lblScore"></label>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-sm-12 text-right">
+                                                                                <input type="button" onclick="AneSaveData()" id="btnAneSave" value="Save" title="Save"
+                                                                                    class="btn btn-warning" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="callout callout-warning">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <label class="col-sm-4 control-label-left">Low Risk        -   0 to 1</label>
+                                                                                    <label class="col-sm-4 control-label-left">Moderate Risk   -   1 to 2.0</label>
+                                                                                    <label class="col-sm-4 control-label-left ">Increased Risk -   2.1 to 4</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.box-body -->
+                                                    </div>
+                                                    <!-- /.box -->
+                                                </div>
+                                                <div id="Cardiology" hidden="hidden" style="">
+                                                    <div class="box box-warning">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title">Cardiology </h3>
+                                                        </div>
+                                                        <div class="box-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I get headaches </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi1" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradio1" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi1" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I have been short of breath  </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi2" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi2" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi2" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I have/had pain in my chest </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi3" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi3" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi3" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I have nose bleed </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi4" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi4" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi4" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I feel I am overweight </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi5" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi5" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi5" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I have been detected with high cholesterol</label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi6" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi6" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi6" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I have been detected with high BP</label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi7" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi7" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Cadmiaradi7" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left">Score</label>
+                                                                            <label class="col-sm-6 control-label-left" id="lblCadScore"></label>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-sm-12 text-right">
+                                                                                <input type="button" onclick="CadSaveData()" id="btnCadSave" value="Save" title="Save"
+                                                                                    class="btn btn-warning" />
+                                                                            </div>
+                                                                        </div>
+                                                                </div>
+                                                                <div class="col-lg-12">
+
+                                                                    <div class="callout callout-warning">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <label class="col-sm-4 control-label-left">Low Risk        -   0 to 1</label>
+                                                                                <label class="col-sm-4 control-label-left">Moderate Risk   -   1 to 2.0</label>
+                                                                                <label class="col-sm-4 control-label-left ">Increased Risk -   2.1 to 4</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.box-body -->
+                                                    </div>
+                                                    <!-- /.box -->
+                                                </div>
+
+                                                <div id="Respiratory"  style="">
+                                                    <div class="box box-warning">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title">Respiratory </h3>
+                                                        </div>
+                                                        <div class="box-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">My cough is present even after cold dissappears</label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio1" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio1" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio1" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">
+                                                                            I am breathless after cough and cold
+                                                                        </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio2" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio2" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio2" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I cough blood </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio3" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio3" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio3" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">
+                                                                            I have had cough and fever for more than
+                                                                            12days in last 6 mnths
+                                                                        </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio4" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio4" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio4" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I smoke cigarette /bedi /cigar </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio5" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio5" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio5" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I have suffered from Tb </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio6" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio6" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio6" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">
+                                                                            I am unable to walk when i have cough
+                                                                        </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio7" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio7" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio7" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label-left">I work in wheat farms </label>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    <input name="Repmiaradio8" id="Radio60" type="radio" checked="checked" value="1" />
+                                                                                    Never or very rarely          
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio8" id="Radio61" type="radio" checked="" value="2" />
+                                                                                    Sometimes           
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input name="Repmiaradio8" id="Radio62" type="radio" checked="" value="3" />
+                                                                                    often or Many times       
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                            <label class="col-sm-6 control-label-left">Score</label>
+                                                                            <label class="col-sm-6 control-label-left" id="lblRepScore"></label>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-sm-12 text-right">
+                                                                                <input type="button" onclick="RepSaveData()" id="btnRepSave" value="Save" title="Save"
+                                                                                    class="btn btn-warning" />
+                                                                            </div>
+                                                                        </div>
+                                                                </div>
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <div class="callout callout-warning">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <label class="col-sm-4 control-label-left">Low Risk        -   0 to 1</label>
+                                                                                <label class="col-sm-4 control-label-left">Moderate Risk   -   1 to 2.0</label>
+                                                                                <label class="col-sm-4 control-label-left ">Increased Risk -   2.1 to 4</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.box-body -->
+                                                    </div>
+                                                    <!-- /.box -->
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">History of Presenting Complaint</label>
+                                                    <div class="col-sm-6">
+                                                        @Html.TextBoxFor(model => model.PresentingComplaint, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">Past Medical History</label>
+                                                    <div class="col-sm-6">
+                                                        @Html.TextBoxFor(model => model.PastMedicalHistory, null, new { @class = "form-control", TextMode = "MultiLine" })
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">Past Surgical History</label>
+                                                    <div class="col-sm-6">
+                                                        @Html.TextBoxFor(model => model.PastSurgicalHistory, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">Family History</label>
+                                                    <div class="col-sm-6">
+                                                        @Html.TextBoxFor(model => model.FamilyHistory, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label-left">Current Medication</label>
+                                                    <div class="col-sm-6">
+                                                        @Html.TextBoxFor(model => model.CurrentMedication, null, new { @class = "form-control", TextMode = "MultiLine" })
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-sm-6 text-right">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6 control-label-left">Date:</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="datepicker" type="text" onclick="Date()"  value="@DateTime.Now" class="form-control" placeholder="" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-6 text-right">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label-left">Specialty</label>
+                                                            <div class="col-sm-4">
+                                                                @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Reaction", new { id = "SpecilatyID", @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6 col-sm-6 text-right">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-6 control-label-left">ECG outcome</label>
+                                                            <div class="col-sm-4">
+                                                                @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a ECG out Come", new { id = "ECGID", @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-6 text-right">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label-left">Screen OUTCOME</label>
+                                                            <div class="col-sm-4">
+                                                                @Html.DropDownList("id", new SelectList(string.Empty, "Value", "Text"), "Please select a Screening out come", new { id = "ScreenID", @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12 text-right">
+                                                        <input type="button" onclick="saveScreenData()" id="btnSave3" hidden="hidden" value="Initiate Consultation"
+                                                            title="Save" class="btn btn-warning" />
+                                                        <label id="lblMsgbox" class="col-sm-2 control-label-left"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="tab_2">
+
+                                            <iframe id="IfCasesheet" src="~/HealthEducator/EncounterSummary?arogyaID=@(Session["strArogyaID"])" style="width: 100%; height: 1000px; overflow: scroll;" frameborder="0"></iframe>
+
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="tab_3">
+                                        </div>
+                                        <div class="tab-pane" id="tab_4">
+                                            <div style="padding: 0 50px">
+                                                <iframe id="IfUpload" src="~/HealthEducator/UploadDocuments?tokenNumber=@(Session["intTokenNumber"])&arogyaID=@(Session["strArogyaID"])&complaintID=@Model.ComplaintID&userID=@(Session["UserID"])" style="width: 100%; height: 1000px; overflow: scroll;" frameborder="0"></iframe>
+
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                    </div>
+                                    <!-- /.tab-content -->
+
+                                </div>
+
+                                <!-- nav-tabs-custom -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+<!-- jQuery 2.1.4 -->
+<script src="../../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
+<!-- Bootstrap 3.3.5 -->
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+@*<script src="plugins/fastclick/fastclick.min.js"></script>*@
+<!-- AdminLTE App -->
+@*<script src="../dist/js/app.min.js"></script>*@
+<!-- AdminLTE for demo purposes -->
+<script src="../../dist/js/demo.js"></script>
+
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+
+        $("#AllrgyTypid").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetAllergytypes")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#AllrgyTypid").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+
+    $(document).ready(function () {
+
+        $("#AllrgyTypid").change(function () {
+
+            $("#Reactionid").empty();
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '@Url.Action("GetReations")',
+
+                dataType: 'json',
+
+                data: { id: $("#AllrgyTypid").val() },
+
+                success: function (citys) {
+
+                    // states contains the JSON formatted list
+
+                    // of states passed from the controller
+
+                    $.each(citys, function (i, city) {
+
+                        $("#Reactionid").append('<option value="'
+
+                        + city.Value + '">'
+
+                        + city.Text + '</option>');
+
+                    });
+
+                },
+
+                error: function (ex) {
+
+                    alert('Failed to retrieve states.' + ex);
+
+                }
+
+            });
+
+            return false;
+
+        });
+
+    });
+
+    $(document).ready(function () {
+
+        $("#Severityid").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("Getseverity")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#Severityid").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+    $(document).ready(function () {
+
+        $("#ScreenID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("Getscreeningoutcome")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#ScreenID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+                    $("#ScreenID option[value='" + 5 + "']").attr("selected", "true");
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+    $(document).ready(function () {
+
+        $("#ECGID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetECGoutcome")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#ECGID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+                    $("#ECGID option[value='" + 3 + "']").attr("selected", "true");
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+    $(document).ready(function () {
+
+        $("#Statusid").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("Getstatus")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#Statusid").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+
+    $(document).ready(function () {
+
+        $("#PCID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("GetpresentingCompalints")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#PCID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+    $(document).ready(function () {
+
+        $("#SpecilatyID").empty();
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: '@Url.Action("Getspecialty")',
+
+            dataType: 'json',
+
+            //data: { id: $("#AllrgyTypid").val() },
+
+            success: function (citys) {
+
+                // states contains the JSON formatted list
+
+                // of states passed from the controller
+
+                $.each(citys, function (i, city) {
+
+                    $("#SpecilatyID").append('<option value="'
+
+                    + city.Value + '">'
+
+                    + city.Text + '</option>');
+
+                });
+
+            },
+
+            error: function (ex) {
+
+                alert('Failed to retrieve states.' + ex);
+
+            }
+
+        });
+
+        return false;
+
+
+
+    });
+
+
+    function bindData() {
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Allrgy")',
+            data: "{}",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            async: "true",
+            success: function (response) {
+
+                if ($('#tblResult').length != 0) // remove table if it exists
+                { $("#tblResult").remove(); }
+
+                var table = "<table class='tblResult' id=tblResult><thead> <tr><th>Name</th><th>Email</th><th>Age</th></thead>  <tbody>";
+                for (var i = 0; i <= response.d.length - 1; i++) {
+                    var row = "<tr>";
+
+                    row += '<td>' + response.d[i].Value + '</td>';
+                    row += '<td>' + response.d[i].Email + '</td>';
+                    row += '<td>' + response.d[i].Age + '</td>';
+                    row += '</tr>';
+                    table += row;
+                }
+                table += '</tbody></table>';
+                $('#divData').html(table);
+                $("#divData").slideDown("slow");
+            },
+            error: function (response) {
+                alert(response.status + ' chandan ' + response.statusText);
+            }
+        });
+    }
+
+    function bindAllergyTable(response) {
+        //personDataTable
+
+        var thead = $("#personDataTable thead")[0].outerHTML;
+
+        var tablerows = "";
+        for (var i = 0; i <= response.length - 1; i++) {
+            var row = "<tr>";
+            row += '<td>' + (i + 1).toString() + '</td>';
+            var date = getdate(response[i].CreateDate)
+            row += '<td>' + date + '</td>';
+            row += '<td>' + response[i].AllergyType + '</td>';
+            row += '<td>' + response[i].ReactionName + '</td>';
+            row += '<td>' + response[i].SeverityrName + '</td>';
+            row += '<td>' + response[i].Status + '</td>';
+
+            row += '</tr>';
+            tablerows += row;
+        }
+        $("#personDataTable")[0].innerHTML = thead + tablerows;
+    }
+
+    function saveData() {
+        var AllrgyTypid = $("#AllrgyTypid").val();
+        var Reactionid = $("#Reactionid").val();
+        var Severityid = $("#Severityid").val();
+        var Statusid = $("#Statusid").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("saveData")',
+            data: "{AllrgyTypid:'" + AllrgyTypid + "',Reactionid:'" + Reactionid + "',Severityid:'" + Severityid + "',Statusid:'" + Statusid + "'}",
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            async: "true",
+            success: function (response) {
+                //$(".errMsg ul").remove();
+
+                bindAllergyTable(response);
+                $("#IfCasesheet")[0].src = "/HealthEducator/EncounterSummary?arogyaID=@(Session["strArogyaID"])";
+            },
+            error: function (response) {
+                alert(response.status + ' ' + response.statusText);
+            }
+        });
+    }
+
+    function drawRow(rowData) {
+        var row = $("<tr />")
+        $("#personDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+        row.append($("<td>" + rowData.id + "</td>"));
+        row.append($("<td>" + rowData.firstName + "</td>"));
+        row.append($("<td>" + rowData.lastName + "</td>"));
+    }
+    function saveVitaltData() {
+        var data = {
+            model: {
+                Height: $("#Height").val(),
+                Weight: $("#Weight").val(),
+                BMI: $("#BMI").val(),
+                SysBP: $("#SysBP").val(),
+                DiaBP: $("#DiaBP").val(),
+                Temparature: $("#Temparature").val(),
+                Pulse: $("#Pulse").val(),
+                Respiratory: $("#Respiratory").val(),
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("saveVitaltData")',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                // Do something interesting here.
+                alert("Data Saved Successfully");
+            }
+        });
+
+    }
+
+    function saveScreenData() {
+        var data = {
+            model: {
+                PresentingComplaint: $("#PresentingComplaint").val(),
+                PastMedicalHistory: $("#PastMedicalHistory").val(),
+                PastSurgicalHistory: $("#PastSurgicalHistory").val(),
+                FamilyHistory: $("#FamilyHistory").val(),
+                CurrentMedication: $("#CurrentMedication").val(),
+                ECGOutcomeID: $("#ECGID").val(),
+                ScreenOutcomeID: $("#ScreenID").val(),
+                chkId: $("#chklist").val(),
+                ComplaintID: $("#PCID").val(),
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("saveScreenData")',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                // Do something interesting here.
+
+                //<iframe src="/HealthEducator/EncounterSummary?arogyaID=@(Session["strArogyaID"])" style="width: 100%; height: 1000px; overflow: scroll;" frameborder="0"></iframe>
+                alert("Data Saved Successfully");
+                $("#tab_1").attr('disabled', 'disabled');
+                //<iframe src="/HealthEducator/UploadDocuments?tokenNumber=@(Session["intTokenNumber"])&arogyaID=@(Session["strArogyaID"])&complaintID=@*@Model.ComplaintID*@&userID=@(Session["UserID"])" style="width: 100%; height: 1000px; overflow: scroll;" frameborder="0"></iframe>
+                $("#IfCasesheet")[0].src = "/HealthEducator/EncounterSummary?arogyaID=@(Session["strArogyaID"])";
+                $("#IfUpload")[0].src = "/HealthEducator/UploadDocuments?tokenNumber=@(Session["intTokenNumber"])&arogyaID=@(Session["strArogyaID"])&complaintID=" + $("#PCID").val() + "&userID=@(Session["UserID"])";
+            }
+        });
+
+    }
+
+
+    $("#Height,#Weight").change(function () {
+        $("#BMI").attr('disabled', 'disabled');
+        var Height = $("#Height").val()
+        var Weight = $("#Weight").val()
+        if (Height != '' && Weight != '') {
+            var meetrs = (parseFloat(Height) / 100)
+            var BMI = parseFloat(Weight) / (meetrs * meetrs);
+            $("#BMI").val(BMI.toFixed(2));
+        }
+        else {
+            $("#BMI").val('');
+        }
+
+    });
+
+    function AneSaveData() {
+        var Anemiaradio = [];
+        for (i = 1; i <= 4; i++) {
+            Anemiaradio.push($('[name="Anemiaradio' + i.toString() + '"]:radio:checked').val());
+
+        }
+
+
+        var data = {
+            model: {
+                AnemiaWeightage: [25, 25, 30, 25],
+                Anemiaradio: Anemiaradio
+
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AneSaveData")',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+
+                $("#lblScore")[0].innerHTML = msg.score.toString();
+
+            }
+        });
+    }
+    function CadSaveData() {
+        var Cadmiaradio = [];
+        for (i = 1; i <= 7; i++) {
+            Cadmiaradio.push($('[name="Cadmiaradio' + i.toString() + '"]:radio:checked').val());
+
+        }
+
+
+        var data = {
+            model: {
+                CadmiaWeightage: [10, 10, 15, 15, 10, 20, 20],
+                Cadmiaradio: Cadmiaradio
+
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CadSaveData")',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+
+                $("#lblCadScore")[0].innerHTML = msg.score.toString();
+
+            }
+        });
+    }
+    function RepSaveData() {
+        var Repmiaradio = [];
+        for (i = 1; i <= 9; i++) {
+            Repmiaradio.push($('[name="Repmiaradio' + i.toString() + '"]:radio:checked').val());
+
+        }
+
+
+        var data = {
+            model: {
+                RepemiaWeightage: [5, 10, 10, 25, 15, 20, 20, 5, 15],
+                Repmiaradio: Repmiaradio
+
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RepSaveData")',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+
+                $("#lblRepScore")[0].innerHTML = msg.score.toString();
+
+            }
+        });
+    }
+
+
+</script>
+
+
+<script type="text/javascript">
+
+
+    function option1() {
+
+        $('#Anemia').show();
+        $('#Cardiology').hide();
+        $('#Respiratory').hide();
+
+    }
+
+    function option2() {
+
+        $('#Anemia').hide();
+        $('#Cardiology').show();
+        $('#Respiratory').hide();
+
+    }
+
+    function option3() {
+        
+        $('#Anemia').hide();
+        $('#Cardiology').hide();
+        $('#Respiratory').show();
+
+    }
+
+    function option4() {
+
+        $('#Anemia').hide();
+        $('#Cardiology').hide();
+        $('#Respiratory').hide();
+
+    }
+    function option5() {
+
+        $('#btnSave4').show();
+
+
+    }
+    function option6() {
+
+        $('#btnSave4').hide();
+
+    }
+    function getdate(date) {
+        //var MyDate_String_Value = 
+        var value = new Date
+                    (
+                         parseInt(date.replace(/(^.*\()|([+-].*$)/g, ''))
+                    );
+        var date = value.getMonth() +
+                                 1 +
+                               "/" +
+                   value.getDate() +
+                               "/" +
+               value.getFullYear();
+        return date;
+    }
+
+
+
+
+
+</script>
+
+
+
+
+<script>
+
+
+    function prepopulateData(selDate, tokenNumber) {
+        var arogyaID = '@(Session["ArogyaID"])';
+
+    }
+   
+
+
+</script>

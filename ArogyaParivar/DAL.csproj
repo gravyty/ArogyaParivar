@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{36A3DD7F-1F8F-4352-8A00-ABBDDEF0305E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EHM.Hybrid.Framework.DAL</RootNamespace>
+    <AssemblyName>EHM.Hybrid.Framework.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EHM.Hybrid.Framework.BLL">
+      <HintPath>..\BLL\bin\Debug\EHM.Hybrid.Framework.BLL.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\EMRApplication\ExterNalDlls\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Doctors.cs" />
+    <Compile Include="ECGLABAssistant.cs" />
+    <Compile Include="EHMModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EHMModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EHMModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EHMModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EHMModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="HealthEducator.cs" />
+    <Compile Include="PatientModel.cs" />
+    <Compile Include="ScreeningModel.cs" />
+    <Compile Include="M_Age.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_AllergyType.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Dosage.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_ECGOutcome.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Frequency.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Gender.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_MCTS_DataMapping.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_PComplaints.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Reaction.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_RefBy.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Route.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_ScreeningOutCome.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Severity.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Specialty.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="M_Status.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PatientDal.cs" />
+    <Compile Include="Pharmacist.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ScreeningDal.cs" />
+    <Compile Include="T_PatientInfo.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_Token.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_Upload.cs">
+      <DependentUpon>EHMModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="EHMModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EHMModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EHMModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EHMModel.edmx</DependentUpon>
+      <LastGenOutput>EHMModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="EHMModel.edmx.diagram">
+      <DependentUpon>EHMModel.edmx</DependentUpon>
+    </None>
+    <None Include="EHMModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EHMModel.edmx</DependentUpon>
+      <LastGenOutput>EHMModel.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

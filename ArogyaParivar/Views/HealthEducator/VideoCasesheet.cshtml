@@ -1,0 +1,406 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <!-- Bootstrap 3.3.5 -->
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link href="~/dist/css/AdminLTE.min.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+
+
+    <link href="~/dist/css/skins/skin-blue-light.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+
+
+
+
+
+    <style>
+        .animate-show {
+            opacity: 1;
+        }
+
+            .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+                transition: all linear 0.5s;
+            }
+
+            .animate-show.ng-hide {
+                opacity: 0;
+            }
+    </style>
+
+
+
+    <div ng-app="appES" ng-controller="ctrlES">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box-body table-responsive">
+                    <table class="table table-bordered  table-hover" ng-repeat="episode in episodes">
+                        <thead>
+                            <tr ng-click="episode.expanded=!episode.expanded" style="background-color: lightblue">
+                                <th style="width: 120px">Complaint : </th>
+                                <th colspan="2">{{episode.ComplaintName}}</th>
+                                <th><span class="pull-right">
+                                    <i ng-class="{ 'glyphicon': true, 'glyphicon-triangle-bottom': !episode.expanded,  'glyphicon-triangle-top': episode.expanded}"></i></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tr class="animate-show" ng-show="episode.expanded">
+                            <td colspan="4">
+                                <table >
+                                    <thead>
+                                        <tr>
+                                            <th>Date/Time</th>
+                                            <th>Nurse Name</th>
+                                            <th>Doctor Name</th>
+                                            <th>Case Sheet</th>
+                                        </tr>
+                                    </thead>
+                                    <tr ng-repeat="encounter in episode.encounterSummaryList | orderBy:'-CreateDate'">
+                                        <td>{{encounter.CreateDate | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                        <td>{{encounter.NurseName}}</td>
+                                        <td>{{encounter.DoctorName}}</td>
+                                        <td>
+                                            <button type="button" ng-click="showEncounterDetails(encounter)">Show Details</button></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="divESDetails" class="row" ng-show="showDetails">
+            <div class="col-lg-12 col-sm-12">
+                <div class="box box-solid box-warning">
+                    <div class="box-header">
+                        <h3 class="box-title">{{selectedEncounter.ComplaintName}} / {{selectedEncounter.UserName}} - {{selectedEncounter.CreateDate | date:'dd/MM/yyyy hh:mm a'}}</h3>
+                        <div class="box-tools pull-right" id="divExpandESDetails">
+                            <button class="btn btn-warning btn-sm" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body bg-warning">
+
+                        <h3>Vitals</h3>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="callout callout-danger">
+                                    <div style="padding: 0 10px;color:black">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-5 control-label-left">Date & Time:</label>
+                                                    <label class="col-sm-7 control-label-left">{{selectedEncounter.Vital.CreateDate | date:'dd/MM/yyyy hh:mm a' }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">Height:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        {{selectedEncounter.Vital.Height}}
+                                                        <span>Cm</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">Weight:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        {{selectedEncounter.Vital.Weight}}
+                                                        <span ">Kg</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">BMI:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        {{selectedEncounter.Vital.BMI}}
+                                                        <span "></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">BP:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        <span >sys</span>
+                                                        {{selectedEncounter.Vital.SysBP}}
+                                                        <span >&nbsp;-&nbsp;dia</span>
+                                                        {{selectedEncounter.Vital.DiaBP}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">Temparature:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        {{selectedEncounter.Vital.Temparature}}
+                                                        <span >°F</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">Pulse:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        {{selectedEncounter.Vital.Pulse}}
+                                                        <span >bpm</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label-left">Respiratory:</label>
+                                                    <div class="col-sm-6 input-group">
+                                                        {{selectedEncounter.Vital.Respiratory}}
+                                                        <span >rpm</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <h3>Allergies</h3>
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px">#</th>
+                                                <th>Date/Time</th>
+                                                <th>Allergy Type</th>
+                                                <th>Reaction</th>
+                                                <th>Severity</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tr ng-repeat="allergy in selectedEncounter.Allergies | orderBy:'-CreateDate'">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{allergy.CreateDate | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                            <td>{{allergy.AllergyTypeName}}</td>
+                                            <td>{{allergy.ReactionName}}</td>
+                                            <td>{{allergy.SeverityName}}</td>
+                                            <td>{{allergy.StatusName}}</td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">History of Presenting Complaint:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.PresentingComplaint}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Past Medical History:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.PastMedicalHistory}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Past Surgical History:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.PastSurgicalHistory}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Family History:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.FamilyHistory}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Current Medication:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.CurrentMedication}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Diagnosis:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.Diagnosis}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Investigations:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.Tests}}</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Medication:</label>
+                                    <div class="col-sm-8 text-right" id="divPrintLink">
+                                        <a href="#" target="_blank" ng-click="printPrescription($event)">Print Prescription</a>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered  table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px">#</th>
+                                                <th>Date</th>
+                                                <th>Drug Name</th>
+                                                <th>Dosage</th>
+                                                <th>Duration</th>
+                                                <th>Frequency</th>
+                                                <th>Route of Administration</th>
+                                                <th>Special Instructions</th>
+                                            </tr>
+                                        </thead>
+                                        <tr ng-repeat="medication in selectedEncounter.Medications | orderBy:'-CreateDate'">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{medication.CreateDate | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                            <td>{{medication.DrugName}}</td>
+                                            <td>{{medication.DoseName}}</td>
+                                            <td>{{medication.Duration}}</td>
+                                            <td>{{medication.FrequencyName}}</td>
+                                            <td>{{medication.RouteName}}</td>
+                                            <td>{{medication.SpecialInstruction}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label-left">Treatment Plan:</label>
+                                    <label class="col-sm-8 control-label-left">{{selectedEncounter.TreatmentPlan}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
+    <!-- Bootstrap 3.3.5 -->
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    @*<script src="plugins/fastclick/fastclick.min.js"></script>*@
+    <!-- AdminLTE App -->
+    <script src="../dist/js/app.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../dist/js/demo.js"></script>
+
+
+
+    <script src="../../Scripts/angular/angular.min.js"></script>
+    <script src="../../Scripts/angular/angular-animate.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module('appES', ['ngAnimate']);
+        app.controller('ctrlES', function ($scope, $http, $window) {
+            $scope.episodes = @Html.Raw(ViewBag.Episodes);
+            $scope.showDetails = false;
+            $scope.selectedEncounter = {};
+            $scope.showEncounterDetails = function (encounter) {
+                var req = {
+                    method: 'POST',
+                    url: '@Url.Action("GetEncounterSummary")',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8'
+                    },
+                    data: { tokenNumber: encounter.Token_Number, createdDate: encounter.CreateDate, arogyaID: encounter.ArogyaID }
+                }
+
+                $http(req).then(
+                    function(response){
+                        //console.log(response);
+                        //angular.forEach(response.data.Allergies, function(value, key){
+                        //    response.data.Allergies[key].CreateDate = new Date(response.data.Allergies[key].CreateDate.replace(/-/g,"/"));
+                        //});
+                        console.log(JSON.parse(response.data));
+                        $scope.selectedEncounter = JSON.parse(response.data);
+                        $scope.showDetails = true;
+                    }, 
+                    function(er){
+                        $scope.showDetails = false; 
+                        alert('Error fetching data');
+                    }
+                );
+
+            };
+            $scope.printPrescription=function(e)
+            {
+                e.preventDefault();
+                //e.stopPropagation();
+                console.log($('#divESDetails')[0].innerHTML);
+
+                var w=window.open('@Url.Action("PrintPage")');
+                w.onload=function () {
+                    w.document.getElementById('divPrint').innerHTML=$window.$('#divESDetails')[0].innerHTML;
+                    w.document.getElementById('divExpandESDetails').style.display='none';
+                    w.document.getElementById('divPrintLink').style.display='none';
+                    w.print();
+                    w.close();
+                }
+
+                $scope.convertToDate=function(date){
+                    return new Date(date);
+                }
+            }
+        });
+    </script>
+
+
+
+
+
+</body>
+</html>

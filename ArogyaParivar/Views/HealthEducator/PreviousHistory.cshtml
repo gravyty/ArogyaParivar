@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "PreviousHistory";
+}
+
+<h2>PreviousHistory</h2>
+<div style="position:relative">
+<table id="tblPrevHistory" style="position:absolute;left:10px;top:10px;z-index:9999">
+    <tr><td>#</td><td>Date</td><td>Complaint</td><td></td></tr>
+    <tr><td>1</td><td>12/1/2016</td><td>Stomach Pain</td><td><a href="#" onclick="prepopulateData('12/1/2016', tokenNumber )">Select</a></td></tr>
+</table>
+    </div>
+
+<script>
+
+    function prepopulateData(selDate, tokenNumber)
+    {
+        var arogyaID='@(Session["ArogyaID"])';
+
+    }
+</script>
